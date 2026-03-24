@@ -100,7 +100,7 @@ def load_all_documents(data_dir: str) -> List[Any]:
     for md_file in md_files:
         print(f"[DEBUG] Loading Markdown: {md_file}")
         try:
-            loader = UnstructuredMarkdownLoader(str(md_file))
+            loader = TextLoader(str(md_file))
             loaded = loader.load()
             print(f"[DEBUG] Loaded {len(loaded)} Markdown docs from {md_file}")
             documents.extend(loaded)

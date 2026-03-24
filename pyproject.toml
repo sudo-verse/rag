@@ -1,0 +1,27 @@
+[project]
+name = "rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "chromadb>=1.5.5",
+    "ipykernel>=7.2.0",
+    "langchain>=1.2.13",
+    "langchain-community>=0.4.1",
+    "langchain-core>=1.2.20",
+    "langchain-groq>=1.1.2",
+    "langchain-openai>=1.1.11",
+    "pymupdf>=1.27.2.2",
+    "pypdf>=6.9.2",
+    "sentence-transformers>=5.3.0",
+    "faiss-cpu>=1.9.0",
+    "python-dotenv>=1.0.1",
+    "docx2txt>=0.8",
+    "unstructured>=0.16.0",
+    "openpyxl>=3.1.5",
+    "jq>=1.7.0",
+    "langchain-text-splitters>=0.2.0",
+    "streamlit>=1.41.0",
+    "markdown>=3.0",
+]

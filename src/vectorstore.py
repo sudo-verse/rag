@@ -20,8 +20,22 @@ class FaissVectorStore:
 
     def build_from_documents(self, documents: List[Any]):
         print(f"[INFO] Building vector store from {len(documents)} raw documents...")
+        if not documents:
+            print("[INFO] No documents found. Initializing empty vector store.")
+            dim = self.model.get_sentence_embedding_dimension()
+            self.index = faiss.IndexFlatL2(dim)
+            self.save()
+            return
+            
         emb_pipe = EmbeddingPipeline(model_name=self.embedding_model, chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap)
         chunks = emb_pipe.chunk_documents(documents)
+        if not chunks:
+            print("[INFO] No chunks generated. Initializing empty vector store.")
+            dim = self.model.get_sentence_embedding_dimension()
+            self.index = faiss.IndexFlatL2(dim)
+            self.save()
+            return
+            
         embeddings = emb_pipe.embed_chunks(chunks)
         metadatas = [{"text": chunk.page_content} for chunk in chunks]
         self.add_embeddings(np.array(embeddings).astype('float32'), metadatas)
@@ -29,6 +43,8 @@ class FaissVectorStore:
         print(f"[INFO] Vector store built and saved to {self.persist_dir}")
 
     def add_embeddings(self, embeddings: np.ndarray, metadatas: List[Any] = None):
+        if embeddings.ndim < 2:
+            return
         dim = embeddings.shape[1]
         if self.index is None:
             self.index = faiss.IndexFlatL2(dim)

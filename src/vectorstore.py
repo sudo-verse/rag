@@ -54,6 +54,9 @@ class FaissVectorStore:
         print(f"[INFO] Loaded Faiss index and metadata from {self.persist_dir}")
 
     def search(self, query_embedding: np.ndarray, top_k: int = 5):
+        if self.index is None or self.index.ntotal == 0:
+            print("[WARNING] Vector store is empty.")
+            return []
         D, I = self.index.search(query_embedding, top_k)
         results = []
         for idx, dist in zip(I[0], D[0]):

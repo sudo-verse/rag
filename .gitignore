@@ -11,3 +11,8 @@ wheels/
 
 # Environment Variables
 .env
+
+# Vector Stores
+faiss_store/
+.pytest_cache/
+.mypy_cache/

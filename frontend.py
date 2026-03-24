@@ -12,29 +12,45 @@ st.set_page_config(
     page_title="RAG AI Assistant",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="auto"  # Automatically collapses sidebar on mobile
 )
 
-# Custom Styling (Dark/Modern)
+# Custom Styling (Dark/Modern & Responsive)
 st.markdown("""
 <style>
-    .reportview-container {
-        background: #0e1117;
+    /* Main background */
+    .stApp {
+        background-color: #0e1117;
     }
+    
     div.stChatFloatingInputContainer {
         padding-bottom: 2rem;
     }
+    
     /* Customize the file uploader */
     div[data-testid="stFileUploader"] {
         padding: 10px;
         border-radius: 12px;
         border: 1px dotted #3d4b60;
     }
+    
     /* Title modern look */
     .title-text {
         font-family: 'Inter', sans-serif;
         font-weight: 800;
         color: #f1f2f6;
+        font-size: 2.5rem;
+    }
+
+    /* Mobile Responsive CSS */
+    @media screen and (max-width: 768px) {
+        .title-text {
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        div.stChatFloatingInputContainer {
+            padding-bottom: 0.5rem;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -137,7 +153,9 @@ if query := st.chat_input("Ask a question about your documents..."):
         message_placeholder = st.empty()
         with st.spinner("Thinking..."):
             try:
-                response, context_chunks = st.session_state.searcher.search_and_summarize(query)
+                # Supply recent message history (excluding current user query)
+                recent_history = [m for m in st.session_state.messages[:-1] if m.get("role") in ["user", "assistant"]]
+                response, context_chunks = st.session_state.searcher.search_and_summarize(query, chat_history=recent_history)
                 message_placeholder.markdown(response)
                 
                 # Render transparency context drawer directly
